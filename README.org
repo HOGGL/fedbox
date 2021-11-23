@@ -1,1 +1,24 @@
-* FedBox: Turnkey Federated Social Networks
+#+TITLE: FedBox: Turnkey Federated Social Networks
+
+* Build Instructions
+** Preparing Sources
+   First clone the Buildroot source and this repository:
+   #+begin_src sh
+     git clone https://github.com/buildroot/buildroot.git
+     cd buildroot
+     git checkout -b stable 2021.08.2
+
+     cd ..
+     git clone https://github.com/HOGGL/fedbox-external.git
+   #+end_src
+  
+   Next find the defconfig for your single board computer in
+   =buildroot/configs= and build the system image. The following
+   example will build an image to be used by Qemu. This is useful for
+   testing purposes. For details on running the image see
+   =board/qemu/arm-vexpress/readme.txt= under the Buildroot tree.
+   #+begin_src sh
+     cd fedbox-external
+     make -C ../buildroot BR2_EXTERNAL=$PWD O=$PWD/output \
+	  qemu_arm_vexpress_defconfig
+   #+end_src
