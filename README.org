@@ -1,6 +1,19 @@
 #+TITLE: FedBox: Turnkey Federated Social Networks
 
 * Build Instructions
+** Dependencies
+   The dependencies required for building this project are:
+   - None yet
+
+
+   The dependencies for Buildroot are described in this [[https://buildroot.org/downloads/manual/manual.html#requirement][document]].
+
+   If you are using Windows Subsystem for Linux, you must add the following to =/etc/wsl.conf=:
+   #+begin_example
+     [interop]
+     appendWindowsPath=False
+   #+end_example
+
 ** Preparing Sources
    First clone the Buildroot source and this repository:
    #+begin_src sh
@@ -22,3 +35,21 @@
      make -C ../buildroot BR2_EXTERNAL=$PWD O=$PWD/output \
 	  qemu_arm_vexpress_defconfig
    #+end_src
+
+** Image Creation
+   Creating the filesystem image for the device is as follows:
+   #+begin_src sh
+     cd output
+     make
+   #+end_src
+
+   It is a good idea to enable build caching if you will compile
+   often. To enable this setting preform the following:
+   #+begin_src sh
+     make menuconfig # -> Build options -> Enable compiler cache
+   #+end_src
+
+   There will now be a complete filesystem image located under
+   =output/images=. For example, when using the BeagleBone defconfig,
+   a =sdcard.img= will be located in that folder and it can be flashed
+   to a SD card using ~dd(1)~ and inserted into the device.
