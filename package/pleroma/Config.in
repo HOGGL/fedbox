@@ -1,0 +1,19 @@
+config BR2_PACKAGE_PLEROMA
+	bool "pleroma (Twitter alternative)"
+	depends on BR2_PACKAGE_POSTGRESQL
+	depends on BR2_PACKAGE_ERLANG
+	select BR2_HOST_PACKAGE_ELIXIR
+	select BR2_HOST_PACKAGE_FILE
+	select BR2_PACKAGE_FILE
+	help
+	  Free and open communication for everyone. Pleroma is social
+	  networking software compatible with other Fediverse software
+	  such as Mastodon, Misskey, Pixelfed and many others.
+
+	  https://pleroma.social
+
+comment "pleroma requires erlang"
+	depends on !BR2_PACKAGE_ERLANG
+
+comment "pleroma requires postgresql"
+	depends on !BR2_PACKAGE_POSTGRESQL
