@@ -8,4 +8,4 @@ qemu-system-arm \
   -append "console=ttyAMA0,115200 rootwait root=/dev/mmcblk0" \
   -serial mon:stdio \
   -net nic,model=lan9118 \
-  -net user # qemu_arm_vexpress_defconfig
+  -net user,hostfwd=tcp::80-:80 # qemu_arm_vexpress_defconfig
