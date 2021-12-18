@@ -1,27 +1,32 @@
-PLEROMA_VERSION = v2.4.1
-PLEROMA_SITE = https://git.pleroma.social/pleroma/pleroma.git
-PLEROMA_SITE_METHOD = git
+ifdef BR2_x86_64
+PLEROMA_FLAVOUR=amd64
+else ifdef BR2_arm
+PLEROMA_FLAVOUR=arm
+else ifdef BR2_aarch64
+PLEROMA_FLAVOUR=aarch64
+endif
+
+ifeq ($(BR2_TOOLCHAIN_BUILDROOT_MUSL),y)
+PLEROMA_FLAVOUR := $(PLEROMA_FLAVOUR)-musl
+endif
+
+PLEROMA_VERSION = develop # stable had arm builds polluted with aarch64 executables
+PLEROMA_SITE = https://git.pleroma.social/api/v4/projects/2/jobs/artifacts/$(PLEROMA_VERSION)
+PLEROMA_SOURCE = download?job=$(PLEROMA_FLAVOUR)
 PLEROMA_LICENSE = AGPL-3
 PLEROMA_LICENSE_FILES = COPYING AGPL-3
-PLEROMA_DEPENDENCIES = host-elixir host-cmake host-file erlang file
+PLEROMA_DEPENDENCIES = ncurses file
 # Add exiftool to strip location data from uploaded images
 
-PLEROMA_TARGET_DEST = $(TARGET_DIR)/opt/pleroma
+# The uuid-ossp extension is used by the setup_db.psql script
+POSTGRESQL_CONF_OPTS+=--with-uuid=e2fs
 
-define PLEROMA_BUILD_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) -f $(PLEROMA_PKGDIR)/Makefile
+define PLEROMA_EXTRACT_CMDS
+	unzip $(PLEROMA_DL_DIR)/$(PLEROMA_SOURCE) -d $(@D)
 endef
 
 define PLEROMA_INSTALL_TARGET_CMDS
-	cd $(@D)/release; find lib releases -type f \! -executable -exec \
-		$(INSTALL) -D -m 644 "{}" "$(PLEROMA_TARGET_DEST)/{}" \;
-
-	$(INSTALL) -d -m 755 $(PLEROMA_TARGET_DEST)/bin
-	$(INSTALL) -m 755 $(@D)/release/bin/* $(PLEROMA_TARGET_DEST)/bin
-
-	cd $(@D)/release; find releases -type f -executable \
-		\( -name "elixir" -o -name "iex" \) -exec \
-		$(INSTALL) -D -m 755 "{}" "$(PLEROMA_TARGET_DEST)/{}" \;
+	rsync -a --exclude=/installation/ $(@D)/release/* $(TARGET_DIR)/opt/pleroma
 
 	$(INSTALL) -d -m 755 \
 		$(TARGET_DIR)/var/lib/pleroma/{uploads,static} \
