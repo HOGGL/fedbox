@@ -22,7 +22,7 @@
      git checkout -b stable 2021.08.2
 
      cd ..
-     git clone https://github.com/HOGGL/fedbox-external.git
+     git clone https://github.com/HOGGL/fedbox.git fedbox-external
    #+end_src
   
    Next find the defconfig for your single board computer in
