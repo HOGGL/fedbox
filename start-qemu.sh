@@ -7,5 +7,6 @@ qemu-system-arm \
   -drive file=images/rootfs.ext2,if=sd,format=raw \
   -append "console=ttyAMA0,115200 rootwait root=/dev/mmcblk0" \
   -serial mon:stdio \
+  -display none \
   -net nic,model=lan9118 \
   -net user # qemu_arm_vexpress_defconfig
