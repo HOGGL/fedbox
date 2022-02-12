@@ -1,0 +1,11 @@
+config BR2_PACKAGE_UNSTOPPABLE_DOMAINS
+	bool "unstoppable-domains"
+	depends on BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS
+	depends on BR2_PACKAGE_CA_CERTIFICATES
+	help
+	  A decentralised domain registrar based on the Ethereum
+	  blockchain.
+
+comment "unstoppable-domains requires CA certificates"
+	depends on !BR2_PACKAGE_CA_CERTIFICATES
+       
